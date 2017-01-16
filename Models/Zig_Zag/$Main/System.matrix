@@ -1,0 +1,185 @@
+
+System:Zig_Zag
+
+    | Copyright (C) 2017 Dark Matter Systems Ltd. All rights reserved.
+
+    Description
+        Paragraph:Title
+            Synchronous Creation and Deletion of an Object
+
+    Matrix:Model:Application
+        Silo:M1:Software_Application
+            Realm:Analysis_Of_Application
+                Domain:Zigzagoon
+
+
+                    Entity:Zig
+                        Relationship
+                            Relationship -|> Zag
+                        State
+
+                            CreationState:Activate
+                                Transition
+                                    EventState
+                                        Start -> Starting
+                                    CannotHappen
+                                        Hold
+                                        Kill
+
+                            DynamicState:Starting
+                                StateAction
+                                    Template
+                                        <<:>>    <<|>>
+                                        <<|>>Zig:Starting
+                                    CreateActive:Zag:Activate
+                                        Relate
+                                            Zig : Relationship : Zag
+                                            Zag : Relationship : Zig
+                                        Template
+                                            <<:>>    <<|>>
+                                            <<|>>    <<|>>
+                                            <<|>>    <<|>>
+                                            <<|>>    <<|>>
+                                            <<|>>    <<|>>
+                                            <<|>>Hold ->
+                                        GenerateEvent
+                                            Zag : Hold
+                                Transition
+                                    EventState
+                                        Hold -> Holding
+                                    CannotHappen
+                                        Start
+                                        Kill
+
+                            DynamicState:Holding
+                                StateAction
+                                    Template
+                                        <<:>>    <<|>>
+                                        <<|>>Zig:Holding
+                                    Traverse
+                                        Navigation
+                                            Zig : Relationship : Zag
+                                        TraverseSelection
+                                            Template
+                                                <<:>>    <<|>>
+                                                <<|>>    <<|>>
+                                                <<|>>    <<|>>
+                                                <<|>>    <<|>>
+                                                <<|>>    <<|>>
+                                                <<|>>Wait ->
+                                            GenerateEvent
+                                                Zag : Wait
+                                Transition
+                                    EventState
+                                        Kill -> Vanish
+                                    CannotHappen
+                                        Start
+                                        Hold
+
+                            DeletionState:Vanish
+                                StateAction
+                                    Template
+                                        <<:>>    <<|>>
+                                        <<|>>Zig:Vanish
+                                        <<:>>
+                                    Traverse
+                                        Navigation
+                                            Zig : Relationship : Zag
+                                        TraverseSelection
+                                            Unrelate
+                                                Zig : Relationship : Zag
+                                            Delete
+                                                Zag
+                                Transition
+                                    CannotHappen
+                                        Start
+                                        Hold
+                                        Kill
+
+
+                    Entity:Zag
+                        Relationship
+                            Relationship --> Zig
+                        State
+
+                            CreationState:Activate
+                                Transition
+                                    EventState
+                                        Hold -> Holding
+                                    CannotHappen
+                                        Wait
+
+                            DynamicState:Holding
+                                StateAction
+                                    Template
+                                        <<:>>    <<|>>
+                                        <<|>>    <<|>>
+                                        <<|>>    <<|>>
+                                        <<|>>    <<|>>
+                                        <<|>>    <<|>>
+                                        <<|>>    <<|>>
+                                        <<|>>    <<|>>
+                                        <<|>>    <<|>>
+                                        Zag:Holding
+                                    Traverse
+                                        Navigation
+                                            Zag : Relationship : Zig
+                                        TraverseSelection
+                                            Template
+                                                <<:>>    <<|>>
+                                                <<|>>    <<|>>
+                                                <<|>>    <<|>>
+                                                <<|>>    <<|>>
+                                                <<|>>    <<|>>
+                                                <<|>><- Hold
+                                            GenerateEvent
+                                                Zig : Hold
+                                Transition
+                                    EventState
+                                        Wait -> Waiting
+                                    CannotHappen
+                                        Hold
+
+                            DynamicState:Waiting
+                                StateAction
+                                    Template
+                                        <<:>>    <<|>>
+                                        <<|>>    <<|>>
+                                        <<|>>    <<|>>
+                                        <<|>>    <<|>>
+                                        <<|>>    <<|>>
+                                        <<|>>    <<|>>
+                                        <<|>>    <<|>>
+                                        <<|>>    <<|>>
+                                        Zag:Waiting
+                                    Traverse
+                                        Navigation
+                                            Zag : Relationship : Zig
+                                        TraverseSelection
+                                            Template
+                                                <<:>>    <<|>>
+                                                <<|>>    <<|>>
+                                                <<|>>    <<|>>
+                                                <<|>>    <<|>>
+                                                <<|>>    <<|>>
+                                                <<|>><- Kill
+                                            GenerateEvent
+                                                Zig : Kill
+                                            Unrelate
+                                                Zag : Relationship : Zig
+                                Transition
+                                    CannotHappen
+                                        Wait
+                                        Hold
+
+
+        Silo:M0:Real_World_Objects
+            RealmObject:Objects_Of_Application
+                DomainObject:Zigzagoon
+                    EntityObject:Zig
+                        Object
+                            | Identity | State
+                            ID001      : Activate
+                        ObjectEvent
+                            | Identity | Event
+                            ID001      : Start

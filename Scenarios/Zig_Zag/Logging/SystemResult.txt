@@ -1,0 +1,10 @@
+
+    Zig:Starting
+                    Hold ->
+                                Zag:Holding
+                    <- Hold
+    Zig:Holding
+                    Wait ->
+                                Zag:Waiting
+                    <- Kill
+    Zig:Vanish

@@ -1,0 +1,16 @@
+
+| Zig Zag Scenario
+
+trace all off
+trace display on
+trace events on
+trace states on
+
+initialise all
+
+
+host pause
+
+exit
+
+| Copyright (C) 2017 Dark Matter Systems Ltd. All rights reserved.
